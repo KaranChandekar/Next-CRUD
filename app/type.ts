@@ -1,6 +1,9 @@
 export interface TaskType {
+  id: string;
   title: string;
-  description: string;
+  description?: string;
   status: string;
-  date?: Date | undefined;
+  completed: boolean;
+  dueDate?: Date | undefined;
+  priority: string;
 }

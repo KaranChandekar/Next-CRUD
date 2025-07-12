@@ -16,9 +16,9 @@ const Task = ({ task }: { task: TaskType }) => {
         <p className="text-sm text-gray-600">{task.description}</p>
       </div>
       <Badge>{statusLabels[task.status] || task.status}</Badge>
-      {task.date && (
+      {task.dueDate && (
         <p className="text-sm text-gray-500">
-          Due: {new Date(task.date).toLocaleDateString()}
+          Due: {new Date(task.dueDate).toLocaleDateString()}
         </p>
       )}
     </div>

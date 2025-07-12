@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { TaskType } from "./type";
 import AddTask from "@/components/AddTask";
 import { TaskTable } from "@/components/TaskTable";
+import { useState } from "react";
+import { TaskType } from "./type";
 
 export default function Home() {
   const [tasks, setTasks] = useState([] as TaskType[]);
@@ -13,7 +13,7 @@ export default function Home() {
       <div className="flex justify-end">
         <AddTask tasks={tasks} setTasks={setTasks} />
       </div>
-      <TaskTable tasks={tasks} setTasks={setTasks} />
+      <TaskTable tasks={tasks} />
     </main>
   );
 }

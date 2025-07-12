@@ -45,7 +45,9 @@ export function TaskTable({ tasks }: { tasks: TaskType[] }) {
                   )}
                 </TableCell>
                 <TableCell className="text-right">
-                  {task.date ? new Date(task.date).toLocaleDateString() : "N/A"}
+                  {task.dueDate
+                    ? new Date(task.dueDate).toLocaleDateString()
+                    : "N/A"}
                 </TableCell>
               </TableRow>
             ))

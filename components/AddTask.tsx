@@ -15,6 +15,7 @@ import {
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { SelectDueDate } from "./SelectDueDate";
+import { SelectPriority } from "./SelectPriority";
 import { SelectStatus } from "./SelectStatus";
 import { Textarea } from "./ui/textarea";
 
@@ -27,18 +28,38 @@ const AddTask = ({ tasks, setTasks }: AddTaskProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [dueDate, setDueDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = useState(false);
+  const [priority, setPriority] = useState("low");
 
-  const handleAddTask = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddTask = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newTask: TaskType = { title, description, status, date };
-    setTasks([...tasks, newTask]);
-    setTitle("");
-    setDescription("");
-    setStatus("");
-    setDate(new Date());
-    setOpen(false); // Close the Sheet after adding
+
+    try {
+      const formData = new FormData(event.currentTarget);
+
+      const response = await fetch("/api/add_task", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to add task");
+      }
+
+      const newTask = await response.json();
+      setTasks([...tasks, newTask]);
+
+      setTitle("");
+      setDescription("");
+      setStatus("");
+      setDueDate(new Date());
+      setOpen(false);
+      setPriority("low");
+    } catch (error) {
+      console.error("Error handling form submission:", error);
+    }
   };
 
   return (
@@ -90,8 +111,17 @@ const AddTask = ({ tasks, setTasks }: AddTaskProps) => {
               <SelectStatus value={status} onValueChange={setStatus} />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="priority">Priority</Label>
+              <SelectPriority value={priority} onValueChange={setPriority} />
+            </div>
+            <div className="grid gap-2">
               <Label htmlFor="due-date">Due Date</Label>
-              <SelectDueDate date={date} setDate={setDate} />
+              <SelectDueDate date={dueDate} setDate={setDueDate} />
+              <input
+                type="hidden"
+                name="dueDate"
+                value={dueDate ? dueDate.toISOString() : ""}
+              />
             </div>
           </div>
           <SheetFooter>
