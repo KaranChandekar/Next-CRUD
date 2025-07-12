@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { TaskType } from "@/app/type";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,57 +10,88 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
+import { useState } from "react";
+import { SelectStatus } from "./SelectStatus";
+import { Textarea } from "./ui/textarea";
 
-const AddTask = () => {
+interface AddTaskProps {
+  tasks: TaskType[];
+  setTasks: (tasks: TaskType[]) => void;
+}
+
+const AddTask = ({ tasks, setTasks }: AddTaskProps) => {
+  const [status, setStatus] = useState("");
+
+  const handleAddTask = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const title = (form.elements.namedItem("title") as HTMLInputElement).value;
+    const description = (
+      form.elements.namedItem("description") as HTMLInputElement
+    ).value;
+    // Use status from state
+    // const status = (form.elements.namedItem("status") as HTMLInputElement).value;
+
+    const newTask: TaskType = { title, description, status };
+    setTasks([...tasks, newTask]);
+    form.reset();
+    setStatus("");
+  };
+
   return (
-    <div>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button>
-            <Plus size={14} /> Add Task
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button>
+          <Plus size={14} /> Add Task
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <form onSubmit={handleAddTask}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Add Task</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              Enter the title, description, and status of the task you want to
+              add.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 mt-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="title">Title</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Enter task title"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <a
-                  href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-              <Input id="password" type="password" required />
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                name="description"
+                placeholder="Enter task description"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="status">Status</Label>
+              <SelectStatus value={status} onValueChange={setStatus} />
             </div>
           </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogFooter className="mt-6">
+            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <button type="submit">Add Task</button>
+            </AlertDialogAction>
           </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

@@ -1,5 +1,5 @@
 export interface TaskType {
   title: string;
-  descreption: string;
+  description: string;
   status: string;
 }

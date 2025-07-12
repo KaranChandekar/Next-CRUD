@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main className="mt-20 mx-auto max-w-xl border w-full p-4 rounded-lg shadow-lg">
       <div className="flex justify-end">
-        <AddTask />
+        <AddTask tasks={tasks} setTasks={setTasks} />
       </div>
       <div className="mt-10">
         {tasks.length > 0 ? (
