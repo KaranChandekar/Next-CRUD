@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { AddTaskSheet } from "@/components/AddTaskSheet";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { TaskDetail } from "@/components/TaskDetail";
+import TasksListSkeleton from "@/components/TasksListSkeleton";
 
 type ViewType = "list" | "detail";
 
@@ -23,6 +24,7 @@ export default function Home() {
     updateTask,
     deleteTask,
     getTaskById,
+    loading,
   } = useTasks();
 
   const [currentView, setCurrentView] = useState<ViewType>("list");
@@ -124,7 +126,9 @@ export default function Home() {
             filteredCount={tasks.length}
           />
 
-          {tasks.length === 0 ? (
+          {loading ? (
+            <TasksListSkeleton />
+          ) : tasks.length === 0 ? (
             filters.search ||
             filters.status !== "all" ||
             filters.priority !== "all" ? (

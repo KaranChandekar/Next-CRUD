@@ -1,60 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Task, TaskFilters } from "../types/task";
 
-// Mock data for demonstration
-const mockTasks: Task[] = [
-  {
-    id: "1",
-    title: "Design System Implementation",
-    description:
-      "Create a comprehensive design system for the new product line with reusable components and documentation.",
-    status: "in-progress",
-    priority: "high",
-    dueDate: "2025-01-25",
-    createdAt: "2025-01-15",
-    updatedAt: "2025-01-20",
-    tags: ["design", "frontend"],
-  },
-  {
-    id: "2",
-    title: "API Integration Testing",
-    description:
-      "Test all API endpoints and ensure proper error handling across the application.",
-    status: "todo",
-    priority: "medium",
-    dueDate: "2025-01-30",
-    createdAt: "2025-01-18",
-    updatedAt: "2025-01-18",
-    tags: ["backend", "testing"],
-  },
-  {
-    id: "3",
-    title: "User Authentication Flow",
-    description:
-      "Implement secure user authentication with JWT tokens and password recovery.",
-    status: "completed",
-    priority: "high",
-    dueDate: "2025-01-20",
-    createdAt: "2025-01-10",
-    updatedAt: "2025-01-19",
-    tags: ["security", "backend"],
-  },
-  {
-    id: "4",
-    title: "Mobile Responsive Updates",
-    description:
-      "Optimize the application for mobile devices and tablet viewing.",
-    status: "todo",
-    priority: "low",
-    dueDate: "2025-02-05",
-    createdAt: "2025-01-19",
-    updatedAt: "2025-01-19",
-    tags: ["frontend", "mobile"],
-  },
-];
-
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<TaskFilters>({
     status: "all",
     priority: "all",
@@ -62,6 +11,27 @@ export const useTasks = () => {
     sortBy: "dueDate",
     sortOrder: "asc",
   });
+
+  // Fetch initial tasks from the server
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/get_tasks");
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   const filteredTasks = useMemo(() => {
     let filtered = tasks.filter((task) => {
@@ -159,5 +129,6 @@ export const useTasks = () => {
     updateTask,
     deleteTask,
     getTaskById,
+    loading,
   };
 };
