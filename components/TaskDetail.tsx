@@ -75,7 +75,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back to Tasks</span>
@@ -84,14 +84,14 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({
             <div className="flex items-center space-x-3">
               <button
                 onClick={onEdit}
-                className="flex items-center space-x-2 px-4 py-2 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Edit className="w-4 h-4" />
                 <span>Edit</span>
               </button>
               <button
                 onClick={onDelete}
-                className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Delete</span>
