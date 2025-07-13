@@ -14,6 +14,16 @@ export async function POST(request: Request) {
         ? new Date(dueDateRaw)
         : undefined;
     const priority = formData.get("priority")?.toString();
+    let tags: string[] = [];
+    const tagsRaw = formData.get("tags");
+    if (tagsRaw) {
+      try {
+        tags = JSON.parse(tagsRaw.toString());
+        if (!Array.isArray(tags)) tags = [];
+      } catch {
+        tags = [];
+      }
+    }
 
     if (!title || !status || !priority) {
       return new Response(
@@ -45,6 +55,7 @@ export async function POST(request: Request) {
         completed: false,
         dueDate: finalDueDate,
         priority,
+        tags,
       },
     });
     return new Response(JSON.stringify(task), {
